@@ -1,6 +1,10 @@
 ---
 title: python资源
 toc: true
+categories:
+  - python
+tags:
+  - resource
 ---
 
 ## Spider
