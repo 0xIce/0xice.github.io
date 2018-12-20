@@ -1,5 +1,7 @@
-# pyStudy
-collection of python study resource and self practise
+---
+title: python资源
+toc: true
+---
 
-## Spider
+# Spider
   1. [Auto_Shadowsocks](https://github.com/VonSdite/Auto_Shadowsocks)
