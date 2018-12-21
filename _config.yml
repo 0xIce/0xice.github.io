@@ -106,6 +106,7 @@ author:
   avatar           : "/assets/images/bio-photo.jpg"
   bio              : "iOS 开发者"
   location         : "北京"
+  weixin           : "NSHotchner"
   links:
     # - label: "Made Mistakes"
     #   icon: "fas fa-fw fa-link"
@@ -119,9 +120,9 @@ author:
     # - label: "Instagram"
     #   icon: "fab fa-fw fa-instagram"
     #   url: "https://instagram.com/mmistakes"
-    - label: "微信公众号"
-      icon: "fab fa-fw fa-weixin"
-      url: "https://github.com/hotchner"
+    # - label: "微信公众号"
+    #   icon: "fab fa-fw fa-weixin"
+    #   url: ""
 
 
 # Site Footer
