@@ -3,9 +3,9 @@ title: 神经病院objc runtime入院考试
 last_modified_at: 2018-12-24T00:20:02+0800
 ---
 
-参加sunnyxx的[神经病院objc runtime入院考试](http://blog.sunnyxx.com/2014/11/06/runtime-nuts/)。
+参加sunnyxx的[神经病院objc runtime入院考试](http://blog.sunnyxx.com/2014/11/06/runtime-nuts/)
 
-1. 下面的代码输出什么？
+## 1. 下面的代码输出什么？
  ```
  @implementation Son : Father
  - (id)init {
