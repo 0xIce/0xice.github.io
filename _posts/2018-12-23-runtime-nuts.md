@@ -1,5 +1,9 @@
 ---
 title: 神经病院objc runtime入院考试
+categories:
+  - iOS
+tags:
+  - objc runtime
 last_modified_at: 2018-12-24T00:20:02+0800
 ---
 
