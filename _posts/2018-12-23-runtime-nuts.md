@@ -58,6 +58,19 @@ BOOL res4 = [(id)[Sark class] isMemberOfClass:[Sark class]];
 跟第一条一样，但是传入了父类对象，所以返回NO。
 3. 剩下两条传入的参数是`[Sark class]`, 完全不在`metaClass`之列，所以都返回NO。
 
-
-
+## 3. 下面的代码会？Compile Error / Runtime Crash / NSLog…?
+```
+@interface NSObject (Sark)
++ (void)foo;
+@end
+@implementation NSObject (Sark)
+- (void)foo {
+    NSLog(@"IMP: -[NSObject (Sark) foo]");
+}
+@end
+// 测试代码
+[NSObject foo];
+[[NSObject new] foo];
+```
+答：都会调用到`-foo`, 对象方法的调用是在class的方法列表中查找(不考虑cache)，类方法的调用是在metaClass的方法列表中查找，找不到的话逐级到父类查找，那么跟上题类似，`NSObject`的metaClass的superclass就是`NSObject`, 所以最终还是会找到`NSObject`的方法列表中，成功调用。
 
