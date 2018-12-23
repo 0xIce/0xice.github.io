@@ -42,6 +42,21 @@ struct objc_super {
 虽然结果一样，但是过程有点区别，`class`方法在`NSObject`类中定义。
 那么`[self class]`的调用是在`Son`类的方法列表开始找，然后逐级到父类寻找直到`NSObject`,而`[super class]`是在`Father`类开始找，逐级找到`NSObject`。
 
+## 2. 下面代码的结果？
+```
+BOOL res1 = [(id)[NSObject class] isKindOfClass:[NSObject class]];
+BOOL res2 = [(id)[NSObject class] isMemberOfClass:[NSObject class]];
+BOOL res3 = [(id)[Sark class] isKindOfClass:[Sark class]];
+BOOL res4 = [(id)[Sark class] isMemberOfClass:[Sark class]];
+```
+答：先说答案，`YES/NO/NO/NO`，然后看一下原因，在OC中class也是对象，是metaClass类型的，instance-class-metaClass的关系可以通过一幅图来看一下：![](/assets/images/isa_superclass_metaclass.png)对于本题来说`NSObject`就对应图中的`Root class`, `Sark`就对应图中的`Superclass`。
+那么上边的问题返回true的条件就是方法的参数传入的是调用者class的metaClass类型，具体看一下。
+
+1. `BOOL res1 = [(id)[NSObject class] isKindOfClass:[NSObject class]];`
+`NSObject`的metaClass类型应该是`[NSObject metaClass]`(代指，实际获取metaClass需要用objc_getMetaClass)，它又是`NSObject`子类，所以参数传入`[NSObject class]`也是YES。
+2. `BOOL res2 = [(id)[NSObject class] isMemberOfClass:[NSObject class]];`
+跟第一条一样，但是传入了父类对象，所以返回NO。
+3. 剩下两条传入的参数是`[Sark class]`, 完全不在`metaClass`之列，所以都返回NO。
 
 
 
