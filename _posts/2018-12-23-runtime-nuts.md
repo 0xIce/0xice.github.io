@@ -49,7 +49,7 @@ BOOL res2 = [(id)[NSObject class] isMemberOfClass:[NSObject class]];
 BOOL res3 = [(id)[Sark class] isKindOfClass:[Sark class]];
 BOOL res4 = [(id)[Sark class] isMemberOfClass:[Sark class]];
 ```
-答：先说答案，`YES/NO/NO/NO`，然后看一下原因，在OC中class也是对象，是metaClass类型的，instance-class-metaClass的关系可以通过一幅图来看一下：![](/assets/images/isa_superclass_metaclass.png)对于本题来说`NSObject`就对应图中的`Root class`, `Sark`就对应图中的`Superclass`。
+答：先说答案，`YES/NO/NO/NO`，然后看一下原因，在OC中class也是对象，是metaClass类型的，instance-class-metaClass的关系可以通过一幅图来看一下：![](/assets/images/isa_superclass_metaclass.png)(图片来自[这里](http://www.sealiesoftware.com/blog/class%20diagram.pdf))对于本题来说`NSObject`就对应图中的`Root class`, `Sark`就对应图中的`Superclass`。
 那么上边的问题返回true的条件就是方法的参数传入的是调用者class的metaClass类型，具体看一下。
 
 1. `BOOL res1 = [(id)[NSObject class] isKindOfClass:[NSObject class]];`
@@ -74,3 +74,31 @@ BOOL res4 = [(id)[Sark class] isMemberOfClass:[Sark class]];
 ```
 答：都会调用到`-foo`, 对象方法的调用是在class的方法列表中查找(不考虑cache)，类方法的调用是在metaClass的方法列表中查找，找不到的话逐级到父类查找，那么跟上题类似，`NSObject`的metaClass的superclass就是`NSObject`, 所以最终还是会找到`NSObject`的方法列表中，成功调用。
 
+## 4. 下面的代码会？Compile Error / Runtime Crash / NSLog…?
+```
+@interface Sark : NSObject
+@property (nonatomic, copy) NSString *name;
+@end
+@implementation Sark
+- (void)speak {
+    NSLog(@"my name's %@", self.name);
+}
+@end
+@implementation ViewController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    id cls = [Sark class];
+    void *obj = &cls;
+    [(__bridge id)obj speak];
+}
+@end
+```
+答：
+
+
+## 参考链接
+1. [Objective-C对象模型及应用](http://blog.devtang.com/2013/10/15/objective-c-object-model)
+2. [神经病院Objective-C Runtime入院第一天——isa和Class](https://www.jianshu.com/p/9d649ce6d0b8)
+3. [神经病院Objective-C Runtime住院第二天——消息发送与转发](https://www.jianshu.com/p/4d619b097e20)
+4. [神经病院Objective-C Runtime出院第三天——如何正确使用Runtime](https://www.jianshu.com/p/db6dc23834e3)
+5. [Dissecting objc_msgSend on ARM64](https://www.mikeash.com/pyblog/friday-qa-2017-06-30-dissecting-objc_msgsend-on-arm64.html#comment-b5af064e508623e696292572c8bfd75c)
