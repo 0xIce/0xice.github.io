@@ -94,7 +94,103 @@ BOOL res4 = [(id)[Sark class] isMemberOfClass:[Sark class]];
 @end
 ```
 答：
+### (1). 会不会crash？
+不会,
+`id`类型在`objc`中的定义是: `typedef struct objc_object *id;`
+那么
+```
+id cls = [Sark class];
+void *obj = &cls;
+```
+可以理解为
+```
+objc_object *cls = [Sark class];
+void *obj = &cls;
+```
+`[Sark class]`的返回`objc_class`类型，`objc_class`继承自`objc_object`, 所以用`objc_object`类型的`cls`接收也是完全可以满足`objc_object`的赋值要求的了。
+再经过`c`类型和`oc`类型的转换，就获得了一个`Sark`类型的实例对象。可以正常调用实例方法。
 
+### (2). 会输出什么？
+会输出什么的关键问题是对象是怎么找到它的属性的，站在巨人的肩膀上，直接看一下[霜神的研究](https://www.jianshu.com/p/9d649ce6d0b8)结论吧
+> Objc中的对象是一个指向ClassObject地址的变量，即 id obj = &ClassObject ， 而对象的实例变量 void *ivar = &obj + offset(N)
+
+ 所以只要找出入栈顺序，找出`obj`在栈中的相邻值就可以了。
+ `viewDidLoad`调用了`super`, `objc_super`的结构是
+```
+struct objc_super {
+    /// Specifies an instance of a class.
+    __unsafe_unretained id receiver;
+
+    /// Specifies the particular superclass of the instance to message. 
+#if !defined(__cplusplus)  &&  !__OBJC2__
+    /* For compatibility with old objc-runtime.h header */
+    __unsafe_unretained Class class;
+#else
+    __unsafe_unretained Class super_class;
+#endif
+    /* super_class is the first class to search */
+};
+#endif
+```
+ 得出入栈顺序是`self, _cmd(SEL, viewDidLoad), super_class, self(receiver), cls, obj`，输出的结果就是`cls`偏移一个地址(32位是4字节，64位是8字节)，就取到了`self`的值
+
+### (3). 变种1
+ ```
+@interface Sark : NSObject
+@property (nonatomic, copy) NSString *sex;
+@property (nonatomic, copy) NSString *name;
+@end
+@implementation Sark
+- (void)speak {
+    NSLog(@"my name's %@", self.name);
+}
+@end
+@implementation ViewController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    id cls = [Sark class];
+    void *obj = &cls;
+    [(__bridge id)obj speak];
+    NSLog(@"super: %@", [super class]);
+}
+@end
+```
+输出:
+```
+my name's ViewController
+super: ViewController
+```
+按照入栈顺序，取到的值应该是`super_class`
+
+### (4). 变种2
+ ```
+@interface Sark : NSObject
+@property (nonatomic, copy) NSString *name;
+@end
+@implementation Sark
+- (void)speak {
+    NSLog(@"my name's %@", self.name);
+}
+@end
+@implementation ViewController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    NSString *myName = @"hotchner";
+    id cls = [Sark class];
+    void *obj = &cls;
+    [(__bridge id)obj speak];
+    [(__bridge id)obj speak];
+}
+@end
+```
+输出:
+```
+my name's hotchner
+```
+新的入栈顺序变成了`self, _cmd(SEL, viewDidLoad), super_class, self(receiver), myName, cls, obj`
+
+## 结语
+真的是神经病院！
 
 ## 参考链接
 1. [Objective-C对象模型及应用](http://blog.devtang.com/2013/10/15/objective-c-object-model)
@@ -102,3 +198,6 @@ BOOL res4 = [(id)[Sark class] isMemberOfClass:[Sark class]];
 3. [神经病院Objective-C Runtime住院第二天——消息发送与转发](https://www.jianshu.com/p/4d619b097e20)
 4. [神经病院Objective-C Runtime出院第三天——如何正确使用Runtime](https://www.jianshu.com/p/db6dc23834e3)
 5. [Dissecting objc_msgSend on ARM64](https://www.mikeash.com/pyblog/friday-qa-2017-06-30-dissecting-objc_msgsend-on-arm64.html#comment-b5af064e508623e696292572c8bfd75c)
+6. [深入解析 ObjC 中方法的结构](https://github.com/draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md#%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90-objc-%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84)
+7. [Objc 对象的今生今世](https://www.jianshu.com/p/f725d2828a2f)
+8. [sunnyxx视频](https://v.youku.com/v_show/id_XODIzMzI3NjAw.html)
