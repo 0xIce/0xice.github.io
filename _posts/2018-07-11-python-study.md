@@ -5,8 +5,8 @@ toc: true
 categories:
   - python
 tags:
-  - resource
+  - Resource
 ---
 
-## Spider
+## 1. Spider
 - [Auto_Shadowsocks](https://github.com/VonSdite/Auto_Shadowsocks)
