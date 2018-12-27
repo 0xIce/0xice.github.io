@@ -1,9 +1,9 @@
 ---
-title: python资源
+title: Python资源
 excerpt: "书籍、开源项目、爬虫等"
 toc: true
 categories:
-  - python
+  - Python
 tags:
   - Resource
 ---
