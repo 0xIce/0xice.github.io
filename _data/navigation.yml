@@ -32,6 +32,9 @@ main:
   #   url: /terms/
   - title: "Categories"
     url: /categories/
+    dropdowns: 
+      - "iOS"
+      - "Python"
   - title: "Tags"
     url: /tags/
   - title: "Sitemap"

@@ -61,3 +61,38 @@ html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
 }
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: $background-color;
+  text-align: center;
+}
+
+.dropdown-content a {
+  display: block;
+  // padding: 10px 20px;
+  &:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 60px;
+    background: $primary-color;
+    width: 100%;
+    -webkit-transition: $global-transition;
+    transition: $global-transition;
+    -webkit-transform: scaleX(0) translate3d(0, 0, 0);
+    transform: scaleX(0) translate3d(0, 0, 0); // hide
+  }
+
+  &:hover:before {
+    -webkit-transform: scaleX(1);
+    -ms-transform: scaleX(1);
+    transform: scaleX(1); // reveal
+  }
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}

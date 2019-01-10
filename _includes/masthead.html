@@ -10,9 +10,22 @@
             {%- else -%}
               {%- assign url = link.url | relative_url -%}
             {%- endif -%}
+
+            {%- if link.dropdowns %}
+            <div class="dropdown">
+              <a class="masthead__menu-item" href="{{ url }}" {% if link.description %}title="{{ link.description }}"{% endif %}>{{ link.title }}</a>
+              <div class="dropdown-content">
+                {%- for dropdown in link.dropdowns -%}
+                  <a href="{{ url }}/{{ dropdown }}">{{ dropdown }}</a>
+                {%- endfor -%}
+              </div>
+            </div>
+            {%- else -%}
             <li class="masthead__menu-item">
               <a href="{{ url }}" {% if link.description %}title="{{ link.description }}"{% endif %}>{{ link.title }}</a>
             </li>
+            {%- endif -%}
+
           {%- endfor -%}
         </ul>
         {% if site.search == true %}
