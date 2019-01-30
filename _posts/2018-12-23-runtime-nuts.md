@@ -22,7 +22,7 @@ last_modified_at: 2018-12-24T00:20:02+0800
  }
  @end
  ```
-答：`[self class]`没什么疑问就不说了，研究一下`super`的调用，先看一下`objc4-750`中的解释:
+答：`[self class]`没什么疑问就不说了，研究一下`super`的调用，先看一下`objc4-750`中的解释:
 > When it encounters a method call, the compiler generates a call to one of the functions objc_msgSend, objc_msgSend_stret, objc_msgSendSuper, or objc_msgSendSuper_stret. Messages sent to an object’s superclass (using the super keyword) are sent using objc_msgSendSuper; other messages are sent using objc_msgSend. Methods that have data structures as return values *  are sent using objc_msgSendSuper_stret and objc_msgSend_stret.
 
 由上面可以看出用`super`调用实际是调用了
@@ -37,9 +37,9 @@ struct objc_super {
     __unsafe_unretained _Nonnull Class super_class;
 };
 ```
-结构体中有两个属性，一个是`receiver`用来存储当前的对象，一个是`super_class`用来存储当前对象的父类类型，所以`[super class]`的`receiver`还是当前对象，那么调用的结果和`[self class]`也是一样的了。
+结构体中有两个属性，一个是`receiver`用来存储当前的对象，一个是`super_class`用来存储当前对象的父类类型，所以`[super class]`的`receiver`还是当前对象，那么调用的结果和`[self class]`也是一样的了。
 
-虽然结果一样，但是过程有点区别，`class`方法在`NSObject`类中定义。
+虽然结果一样，但是过程有点区别，`class`方法在`NSObject`类中定义。
 那么`[self class]`的调用是在`Son`类的方法列表开始找，然后逐级到父类寻找直到`NSObject`,而`[super class]`是在`Father`类开始找，逐级找到`NSObject`。
 
 ## 2. 下面代码的结果？
@@ -49,14 +49,14 @@ BOOL res2 = [(id)[NSObject class] isMemberOfClass:[NSObject class]];
 BOOL res3 = [(id)[Sark class] isKindOfClass:[Sark class]];
 BOOL res4 = [(id)[Sark class] isMemberOfClass:[Sark class]];
 ```
-答：先说答案，`YES/NO/NO/NO`，然后看一下原因，在OC中class也是对象，是metaClass类型的，instance-class-metaClass的关系可以通过一幅图来看一下：![](/assets/images/isa_superclass_metaclass.png)(图片来自[这里](http://www.sealiesoftware.com/blog/class%20diagram.pdf))对于本题来说`NSObject`就对应图中的`Root class`, `Sark`就对应图中的`Superclass`。
-那么上边的问题返回true的条件就是方法的参数传入的是调用者class的metaClass类型，具体看一下。
+答：先说答案，`YES/NO/NO/NO`，然后看一下原因，在OC中class也是对象，是metaClass类型的，instance-class-metaClass的关系可以通过一幅图来看一下：![](/assets/images/isa_superclass_metaclass.png)(图片来自[这里](http://www.sealiesoftware.com/blog/class%20diagram.pdf))对于本题来说`NSObject`就对应图中的`Root class`, `Sark`就对应图中的`Superclass`。
+那么上边的问题返回true的条件就是方法的参数传入的是调用者class的metaClass类型，具体看一下。
 
 1. `BOOL res1 = [(id)[NSObject class] isKindOfClass:[NSObject class]];`
-`NSObject`的metaClass类型应该是`[NSObject metaClass]`(代指，实际获取metaClass需要用objc_getMetaClass)，它又是`NSObject`子类，所以参数传入`[NSObject class]`也是YES。
+`NSObject`的metaClass类型应该是`[NSObject metaClass]`(代指，实际获取metaClass需要用objc_getMetaClass)，它又是`NSObject`子类，所以参数传入`[NSObject class]`也是YES。
 2. `BOOL res2 = [(id)[NSObject class] isMemberOfClass:[NSObject class]];`
-跟第一条一样，但是传入了父类对象，所以返回NO。
-3. 剩下两条传入的参数是`[Sark class]`, 完全不在`metaClass`之列，所以都返回NO。
+跟第一条一样，但是传入了父类对象，所以返回NO。
+3. 剩下两条传入的参数是`[Sark class]`, 完全不在`metaClass`之列，所以都返回NO。
 
 ## 3. 下面的代码会？Compile Error / Runtime Crash / NSLog…?
 ```
@@ -72,7 +72,7 @@ BOOL res4 = [(id)[Sark class] isMemberOfClass:[Sark class]];
 [NSObject foo];
 [[NSObject new] foo];
 ```
-答：都会调用到`-foo`, 对象方法的调用是在class的方法列表中查找(不考虑cache)，类方法的调用是在metaClass的方法列表中查找，找不到的话逐级到父类查找，那么跟上题类似，`NSObject`的metaClass的superclass就是`NSObject`, 所以最终还是会找到`NSObject`的方法列表中，成功调用。
+答：都会调用到`-foo`, 对象方法的调用是在class的方法列表中查找(不考虑cache)，类方法的调用是在metaClass的方法列表中查找，找不到的话逐级到父类查找，那么跟上题类似，`NSObject`的metaClass的superclass就是`NSObject`, 所以最终还是会找到`NSObject`的方法列表中，成功调用。
 
 ## 4. 下面的代码会？Compile Error / Runtime Crash / NSLog…?
 ```
@@ -94,7 +94,7 @@ BOOL res4 = [(id)[Sark class] isMemberOfClass:[Sark class]];
 @end
 ```
 答：
-### (1). 会不会crash？
+### (1). 会不会crash？
 不会,
 `id`类型在`objc`中的定义是: `typedef struct objc_object *id;`
 那么
@@ -107,15 +107,15 @@ void *obj = &cls;
 objc_object *cls = [Sark class];
 void *obj = &cls;
 ```
-`[Sark class]`的返回`objc_class`类型，`objc_class`继承自`objc_object`, 所以用`objc_object`类型的`cls`接收也是完全可以满足`objc_object`的赋值要求的了。
-再经过`c`类型和`oc`类型的转换，就获得了一个`Sark`类型的实例对象。可以正常调用实例方法。
+`[Sark class]`的返回`objc_class`类型，`objc_class`继承自`objc_object`, 所以用`objc_object`类型的`cls`接收也是完全可以满足`objc_object`的赋值要求的了。
+再经过`c`类型和`oc`类型的转换，就获得了一个`Sark`类型的实例对象。可以正常调用实例方法。
 
 ### (2). 会输出什么？
-会输出什么的关键问题是对象是怎么找到它的属性的，站在巨人的肩膀上，直接看一下[霜神的研究](https://www.jianshu.com/p/9d649ce6d0b8)结论吧
+会输出什么的关键问题是对象是怎么找到它的属性的，站在巨人的肩膀上，直接看一下[霜神的研究](https://www.jianshu.com/p/9d649ce6d0b8)结论吧
 > Objc中的对象是一个指向ClassObject地址的变量，即 id obj = &ClassObject ， 而对象的实例变量 void *ivar = &obj + offset(N)
 
- 所以只要找出入栈顺序，找出`obj`在栈中的相邻值就可以了。
- `viewDidLoad`调用了`super`, `objc_super`的结构是
+ 所以只要找出入栈顺序，找出`obj`在栈中的相邻值就可以了。
+ `viewDidLoad`调用了`super`, `objc_super`的结构是
 ```
 struct objc_super {
     /// Specifies an instance of a class.
@@ -132,9 +132,9 @@ struct objc_super {
 };
 #endif
 ```
- 得出入栈顺序是`self, _cmd(SEL, viewDidLoad), super_class, self(receiver), cls, obj`，输出的结果就是`cls`偏移一个地址(32位是4字节，64位是8字节)，就取到了`self`的值
+ 得出入栈顺序是`self, _cmd(SEL, viewDidLoad), super_class, self(receiver), cls, obj`，输出的结果就是`cls`偏移一个地址(32位是4字节，64位是8字节)，就取到了`self`的值
 
-### (3). 变种1
+### (3). 变种1
  ```
 @interface Sark : NSObject
 @property (nonatomic, copy) NSString *sex;
