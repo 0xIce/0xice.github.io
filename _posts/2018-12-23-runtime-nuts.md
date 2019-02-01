@@ -4,6 +4,7 @@ categories:
   - iOS
 tags:
   - objc runtime
+toc: true
 last_modified_at: 2018-12-24T00:20:02+0800
 ---
 
@@ -154,7 +155,7 @@ struct objc_super {
     NSLog(@"super: %@", [super class]);
 }
 @end
-```
+ ```
 输出:
 ```
 my name's ViewController
@@ -182,7 +183,7 @@ super: ViewController
     [(__bridge id)obj speak];
 }
 @end
-```
+ ```
 输出:
 ```
 my name's hotchner
