@@ -251,6 +251,41 @@ callAlloc(Class cls, bool checkNil, bool allocWithZone=false)
 
 苹果的引用计数值存储在一个散列表中，对应的操作是通过`obj`获取引用计数表，操作对应的引用计数值。
 
+**retainCount**
+
+```objective-c
++ (NSUInteger)retainCount {
+    return ULONG_MAX;
+}
+
+- (NSUInteger)retainCount {
+    return ((id)self)->rootRetainCount();
+}
+
+inline uintptr_t 
+objc_object::rootRetainCount()
+{
+    if (isTaggedPointer()) return (uintptr_t)this;
+
+    sidetable_lock();
+    isa_t bits = LoadExclusive(&isa.bits);
+    ClearExclusive(&isa.bits);
+    if (bits.nonpointer) {
+        uintptr_t rc = 1 + bits.extra_rc;
+        if (bits.has_sidetable_rc) {
+            rc += sidetable_getExtraRC_nolock();
+        }
+        sidetable_unlock();
+        return rc;
+    }
+
+    sidetable_unlock();
+    return sidetable_retainCount();
+}
+```
+
+先判断是不是taggedPointer类型的内存管理方式，如果是直接返回
+
 ##### 1.2.2.3 对比
 
 **通过内存块头部管理引用计数的好处**
