@@ -124,7 +124,7 @@ swift 中逻辑运算符为左结合，从左到右执行，遵循`short-circuit
 ```swift
 let linesWithIndentation = """
 		This line doesn't begin with whitespace.
-    		This line begins with four spaces.
+    		    This line begins with four spaces.
 		This line doesn't begin with whitespace.
 		"""
 ```
