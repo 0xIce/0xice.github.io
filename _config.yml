@@ -104,7 +104,7 @@ analytics:
 author:
   name             : *name # *name is a YAML reference pointing to the &anchor earlier
   avatar           : "/assets/images/bio-photo.jpg"
-  bio              : "现役 iOS开发工程师"
+  bio              : "iOS开发工程师"
   location         : "北京"
   weixin           : "NSHotchner"
   links:
