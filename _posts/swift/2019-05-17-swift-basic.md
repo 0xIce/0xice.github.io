@@ -1,5 +1,5 @@
 ---
-title: HTTP-基本概念和术语
+title: Swift 基本类型
 tags:
   - swift
 toc: true
