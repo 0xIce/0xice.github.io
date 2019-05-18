@@ -64,5 +64,23 @@ gameLoop: while square != finalSquare {
 print("Game over!")
 ```
 
-## Functions
+## Structures and Classes
+
+### Compare
+
+**common**
+
+1. 定义属性
+2. 定义方法
+3. 定义subscripts
+4. 定义构造方法
+5. extended
+6. 遵守协议
+
+**diff( class才有)**
+
+1. 继承
+2. 
+
+
 
