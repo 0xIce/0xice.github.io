@@ -20,10 +20,10 @@ main:
     url: /categories/
   - title: "Tags"
     url: /tags/
-  - title: "Sitemap"
-    url: /sitemap/
-  - title: "Home"
-    url: /
+  # - title: "Sitemap"
+  #   url: /sitemap/
+  # - title: "Home"
+  #   url: /
 
 
 # documentation links
