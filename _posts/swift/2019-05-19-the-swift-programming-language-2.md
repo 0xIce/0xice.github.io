@@ -1,4 +1,3 @@
-```yaml
 ---
 title: 重读 Swift (5.0) 第二篇
 excerpt: Control Flow、Closures、Structures and Classes、Properties、Subscripts
@@ -6,7 +5,6 @@ tags:
   - swift
 toc: true
 ---
-```
 
 ## Control Flow
 
@@ -213,3 +211,4 @@ subscript(index: Int) -> Int {
 
 - 一个类型可以定义多个subscripts, 每个subscript可以定义多个多种类型的参数，调用时根据参数个数和类型确定具体哪个subscript，实现subscript的重载
 - subscript可以有read-write和read-only属性，与计算型属性相同
+
