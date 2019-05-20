@@ -138,7 +138,7 @@ let linesWithIndentation = """
 - 当比较相等的时候也是通过组合之后的值进行比较
 
 ```swift
-“var word = "cafe"
+var word = "cafe"
 print("the number of characters in \(word) is \(word.count)")
 // Prints "the number of characters in cafe is 4"
 
@@ -177,4 +177,20 @@ print("the number of characters in \(word) is \(word.count)")
 let keyArr = [String](dic.keys)
 let valueArr = [String](dic.values)
 ```
+
+
+
+---
+
+## Quiz
+
+<details>
+ <summary>Q1: Sting 类型的 count 属性的时间复杂度是多少？Array呢？</summary>
+  <p>
+  String count 是 O(n)， Array count 是 O(1)。
+  因为Swift 中 String 的 count 计算的是字符组合之后的长度。
+  </p>
+  <p><code>var word = "cafe" // cafe，长度是 4</code></p>
+  <p><code>word += "\u{301}" // café，长度还是 4</code></p>
+</details>
 
