@@ -1,6 +1,6 @@
 ---
 title: 重读 Swift (5.0) 第三篇
-excerpt: Inheritance、Initialization
+excerpt: Inheritance、Initialization、Deinitialization
 tags:
   - swift
 toc: true
@@ -122,4 +122,81 @@ Default value is preferred
 
    1. `Designated Initializer` 这时候就可以对本类对象做一些自定义的赋值和调用，比如改变属性的值，调用实例方法等
 
-   2. `Convenience Initializer` 这时候
+   2. `Convenience Initializer` 这时候可以做一些自定义的赋值和调用
+
+### 7. Initializer Inheritance and Overriding
+
+1. swift 的子类不会自动继承父类的初始化方法，以防止子类初始化时调用了父类初始化方法导致对象没有被正确的初始化（满足特定条件的时候可以自动继承）
+2. 子类可以重写父类的 `Designated Initializer`，在方法名前加 `override` 关键字，可重写的初始化方法包括默认初始化方法
+3. 当子类定义的初始化方法和父类的 `Convenience Initializer` 相同的时候，根据 `Rule 1`, 子类不可以不可以直接调用父类的 `Convenience Initializer`, 所以严格来说并没有重写，所以不需要添加 `override` 关键字
+4. 如果子类定义的初始化方法没有在 `Phase 2` 对对象进行修改，并且父类有不需要参数的指定初始化方法，那么子类的初始化方法中可以省略调用父类的初始化方法，实际是对 `super.init()` 的隐式调用
+
+### 8. Automic Initializer Inheritance
+
+#### 前提
+
+自动继承的前提是所有子类子类定义的存储属性都被赋了默认值
+
+#### 继承规则
+
+1. 如果子类没有定义任何指定初始化方法，那么子类会自动继承父类的所有指定初始化方法
+
+2. 如果子类实现了父类的所有指定初始化方法（从规则1继承或者都重写了），那么子类会自动继承父类的所有便利构造方法
+
+   > 规则2中，可以将父类的指定构造方法重写为子类的便利构造方法
+
+### 9. Failable Initializers
+
+1. 定义可失败的初始化方法的方式是在 `init` 后面加一个问号，如 `init?()`
+
+   > 不可以同时定义相同参数的一个可失败的和一个不可失败的方法
+
+2. 当发生初始化失败时，`return nil` 来直接返回
+
+3. 初始化失败的规则可以自定义，比如一些参数不符合要求，或者其它情况发生了失败
+
+4. 可失败的初始化方法返回的是一个 `optional` 对象类型
+
+### 10. Propagation for Initialization Failure
+
+1. 一个可失败的初始化方法可以调用本类的另一个可失败的初始化方法，一个子类的可失败的初始化方法可以调用父类可失败的初始化方法
+2. 一个可失败的初始化方法可以调用一个不可失败的初始化方法，可以通过这种形式对不可失败的初始化过程添加可失败的状态和表现
+
+### 11. Overriding a Failable Initializer
+
+1. 可以将父类可失败的初始化方法在子类重写为不可失败的初始化方法，反之不可以
+2. 父类可失败的初始化方法重写为不可失败的初始化方法时， **只能用强制解包**的方式调用父类可失败的初始化方法，也可以调用父类不可失败的指定初始化方法
+
+### 12. The init! Failable Initializer
+
+1. init? 可以调用 init!，反之也可以
+2. init? 可以重写为 init!，反之也可以
+3. init 可以调用 init!，反之也可以
+
+### 13. Required Initializers
+
+1. 被required标记的初始化方法，子类必须重写
+2. 子类重写时，前面也要写 `required` 关键字，不写 `override` 关键字
+3. 如果子类满足继承初始化方法的条件，可以不用显式重写
+
+## Deinitialization
+
+1. `deinitializer` 在对象` deallocate` 之前被立马调用
+2. 父类的 `deinit` 在子类的 `deinit` 结束之后自动调用
+3. 对象在 `deinit` 调用结束之前还没有被释放，所以 `deinitializer` 可以访问所有的属性，比如通过保存的文件名关闭打开的文件
+
+## Quiz
+
+<details>
+  <summary>Q1: 为什么本类的初始化要放在 super 调用之前？反过来会有什么问题？</summary>
+  <p>
+    因为子类有可能重写了父类的方法，而父类的初始化方法中又可能调用了重写的方法，如果子类的方法重写中读取了子类新增的属性，父类在子类初始化之前调用就会出错。
+  </p>
+  <p>
+    <b>所以需要满足上述的 <code>Safety Check 1</code></b>
+  </p>
+</details>
+
+## 参考文档
+
+1. [Medium](https://medium.com/@dineshk1389/swift-why-super-init-is-called-after-setting-all-self-properties-d6827e9f4eb2)

@@ -187,8 +187,8 @@ let valueArr = [String](dic.values)
 <details>
  <summary>Q1: Sting 类型的 count 属性的时间复杂度是多少？Array呢？</summary>
   <p>
-  String count 是 O(n)， Array count 是 O(1)。
-  因为Swift 中 String 的 count 计算的是字符组合之后的长度。
+    String count 是 O(n)， Array count 是 O(1)。
+    因为Swift 中 String 的 count 计算的是字符组合之后的长度。
   </p>
   <p><code>var word = "cafe" // cafe，长度是 4</code></p>
   <p><code>word += "\u{301}" // café，长度还是 4</code></p>
