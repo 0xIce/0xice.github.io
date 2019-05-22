@@ -100,7 +100,7 @@ Default value is preferred
 1. `Designated Initializer` 必须保证在调用父类初始化方法之前所有本类声明的存储属性都被初始化了
 2. `Designated Initializer` 在给继承的属性赋值之前，必须调用了父类的初始化方法，否则赋的值会被父类的初始化方法重写
 3. `Convenience Initializer` 在给属性(本类定义的属性和继承的属性)赋值之前，必须调用了本类其它的初始化方法，否则赋的值会被本类的 `Designated Initializer` 覆盖
-4. 在 `Phase-1` 之前，初始化方法不能调用任何实例方法，读取实例属性的值，不能将 `self` 作为值被引用
+4. 在 `Phase-1` 之前，初始化方法不能调用任何实例方法，读取实例属性的值，不能将 `self` 作为值被引用(比如将 `self` 当作参数初始化另一个类型)
 
 ##### 4. 过程
 
