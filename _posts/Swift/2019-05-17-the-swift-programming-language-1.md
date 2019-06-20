@@ -2,7 +2,7 @@
 title: 重读 Swift (5.0) 第一篇
 excerpt: The Basics、Basic Operators、Strings and Characters、Collection Types
 tags:
-  - swift
+  - Swift
 toc: true
 ---
 

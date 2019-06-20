@@ -1,3 +1,11 @@
+---
+title: Operation 和 OperationQueue 入门
+excerpt: 基本概念、对比GCD、暂停/恢复、任务依赖
+tags:
+  - swift
+toc: true
+---
+
 ## Concepts
 
 > 在 iOS 和 macOS 中，thread 功能是由 POSIX Threads API(pthreads) 提供的，并且是操作系统的一部分。pthreads 比较底层，容易出错且不易发现。

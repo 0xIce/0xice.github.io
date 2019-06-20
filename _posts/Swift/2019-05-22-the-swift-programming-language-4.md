@@ -2,7 +2,7 @@
 title: 重读 Swift (5.0) 第四篇
 excerpt: Type Casting、Protocols、Generics、Automatic Reference Counting、Memory Safety、Access Control
 tags:
-  - swift
+  - Swift
 toc: true
 ---
 

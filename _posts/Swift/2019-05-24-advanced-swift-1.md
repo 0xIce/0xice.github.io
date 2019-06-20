@@ -2,7 +2,7 @@
 title: 读  Advanced Swift (4.0) 第一篇
 excerpt: 术语、风格指南
 tags:
-  - swift
+  - Swift
 toc: true
 ---
 
