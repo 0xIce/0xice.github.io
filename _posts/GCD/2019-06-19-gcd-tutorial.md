@@ -2,7 +2,7 @@
 title: GCD 入门
 excerpt: 并行并发、同步异步、队列、多读单写、组
 tags:
-  - Swift GCD
+  - GCD
 toc: true
 ---
 
