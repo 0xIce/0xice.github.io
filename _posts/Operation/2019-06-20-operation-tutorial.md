@@ -50,3 +50,4 @@ Operation 是构建于 GCD 之上的，更高级别的封装。
 ## Reference
 
 1. 不完整翻译自 [raywenderlich](https://www.raywenderlich.com/5293-operation-and-operationqueue-tutorial-in-swift)
+2. [demo](https://github.com/hotchner/Demos/tree/master/ClassicPhotos)
