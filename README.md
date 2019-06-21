@@ -4,7 +4,7 @@
 
 ## Contents
 
-| Series | Input                   |
+| Topic | Input                   |
 | :----- | :-------------------------- |
 |   GCD   | [tutorial](_posts/GCD/2019-06-19-gcd-tutorial.md) |
 | Operation | [tutorial](_posts/Operation/2019-06-20-operation-tutorial.md) |
