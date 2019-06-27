@@ -494,5 +494,4 @@ extension SQLiteDatabase {
 
 1. 不完整翻译自 [raywenderlich](https://www.raywenderlich.com/385-sqlite-with-swift-tutorial-getting-started)
 2. [demo](https://github.com/hotchner/Demos/tree/master/SQLiteTutorial)
-3.  [SQLite.swift](https://github.com/stephencelis/SQLite.swift)
-4. 
+3. [SQLite.swift](https://github.com/stephencelis/SQLite.swift)
