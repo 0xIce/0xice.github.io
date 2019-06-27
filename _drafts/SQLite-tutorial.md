@@ -298,9 +298,201 @@ func prepareMalformedQuery() {
 
 ## SQLite with Swift
 
+### Wrap Errors
 
+```swift
+enum SQLiteError: Error {
+  case OpenDatabase(message: String)
+  case Prepare(message: String)
+  case Step(message: String)
+  case Bind(message: String)
+}
+```
+
+封装错误类型，关联值记录错误信息
+
+将数据库的操作封装为可以 throw error 的方法
+
+### Wrap the Database Connection
+
+原始的方法中使用到了 `OpaquePointer` 类型，可以做 Swift 化的封装
+
+```swift
+class SQLiteDatabase {
+  fileprivate let dbPointer: OpaquePointer?
+
+  fileprivate init(dbPointer: OpaquePointer?) {
+    self.dbPointer = dbPointer
+  }
+
+  deinit {
+    sqlite3_close(dbPointer)
+  }
+  
+  fileprivate var errorMessage: String {
+    if let errorPointer = sqlite3_errmsg(dbPointer) {
+      let errorMessage = String(cString: errorPointer)
+      return errorMessage
+    } else {
+      return "No error message provided from sqlite."
+    }
+  }
+}
+
+let db: SQLiteDatabase
+do {
+  db = try SQLiteDatabase.open(path: part2DbPath)
+  print("Successfully opened connection to database.")
+} catch SQLiteError.OpenDatabase(let message) {
+  print("Unable to open database: \(message)")
+  PlaygroundPage.current.finishExecution()
+}
+```
+
+### Wrap the Prepare Call
+
+```swift
+extension SQLiteDatabase {
+  func prepareStatement(sql: String) throws -> OpaquePointer? {
+    var statement: OpaquePointer? = nil
+    guard sqlite3_prepare_v2(dbPointer, sql, -1, &statement, nil) == SQLITE_OK else {
+      throw SQLiteError.Prepare(message: errorMessage)
+    }
+
+    return statement
+  }
+}
+```
+
+### Wrap the Table Creation
+
+```swift
+struct Contact {
+  let id: Int32
+  let name: NSString
+}
+```
+
+```swift
+protocol SQLTable {
+  static var createStatement: String { get }
+}
+```
+
+```swift
+extension Contact: SQLTable {
+  static var createStatement: String {
+    return """
+    CREATE TABLE Contact(
+      Id INT PRIMARY KEY NOT NULL,
+      Name CHAR(255)
+    );
+    """
+  }
+}
+```
+
+```swift
+extension SQLiteDatabase {
+  func createTable(table: SQLTable.Type) throws {
+    // 1
+    let createTableStatement = try prepareStatement(sql: table.createStatement)
+    // 2
+    defer {
+      sqlite3_finalize(createTableStatement)
+    }
+    // 3
+    guard sqlite3_step(createTableStatement) == SQLITE_DONE else {
+      throw SQLiteError.Step(message: errorMessage)
+    }
+    print("\(table) table created.")
+  }
+}
+```
+
+> 参数是 SQLTable.Type 而不是 SQLTable 是因为 createStatement 为 static 修饰
+
+```swift
+do {
+  try db.createTable(table: Contact.self)
+} catch {
+  print(db.errorMessage)
+}
+```
+
+### Wrap Insertions
+
+```swift
+extension SQLiteDatabase {
+  func insertContact(contact: Contact) throws {
+    let insertSql = "INSERT INTO Contact (Id, Name) VALUES (?, ?);"
+    let insertStatement = try prepareStatement(sql: insertSql)
+    defer {
+      sqlite3_finalize(insertStatement)
+    }
+    
+    let name: NSString = contact.name as NSString
+    guard sqlite3_bind_int(insertStatement, 1, contact.id) == SQLITE_OK,
+      sqlite3_bind_text(insertStatement, 2, name.utf8String, -1, nil) == SQLITE_OK  else {
+        throw SQLiteError.Bind(message: errorMessage)
+    }
+    
+    guard sqlite3_step(insertStatement) == SQLITE_DONE else {
+      throw SQLiteError.Step(message: errorMessage)
+    }
+    
+    print("Successfully inserted row.")
+  }
+}
+
+do {
+  try db.insertContact(contact: Contact(id: 1, name: "Ray"))
+} catch {
+  print(db.errorMessage)
+}
+```
+
+### Wrap Reads
+
+```swift
+extension SQLiteDatabase {
+  func contact(id: Int32) -> Contact? {
+    let querySql = "SELECT * FROM Contact WHERE Id = ?;"
+    
+    guard let queryStatement = try? prepareStatement(sql: querySql) else {
+      return nil
+    }
+    
+    defer {
+      sqlite3_finalize(queryStatement)
+    }
+    
+    guard sqlite3_bind_int(queryStatement, 1, id) == SQLITE_OK else {
+      return nil
+    }
+    
+    guard sqlite3_step(queryStatement) == SQLITE_ROW else {
+      return nil
+    }
+    
+    let id = sqlite3_column_int(queryStatement, 0)
+    
+    let queryResultCol1 = sqlite3_column_text(queryStatement, 1)
+    let name = String(cString: queryResultCol1!)
+    
+    return Contact(id: id, name: name)
+  }
+}
+```
+
+## 小结
+
+1. SQLite 的使用过程，打开数据库、写 SQL 语句、编译语句、[填充语句中的占位值]、执行、[多次使用重置语句，填充占位置，执行]、结束语句、关闭数据库
+2. SQLITE_ROW 用在查询结果的记录，SQLITE_DONE 用于增删改查的结束，SQLITE_OK 用在一般语句的结果判断
 
 ## Reference
 
 1. 不完整翻译自 [raywenderlich](https://www.raywenderlich.com/385-sqlite-with-swift-tutorial-getting-started)
 2. [demo](https://github.com/hotchner/Demos/tree/master/SQLiteTutorial)
+3.  [SQLite.swift](https://github.com/stephencelis/SQLite.swift)
+4. 
