@@ -20,13 +20,12 @@
     <td><a href="_posts/Persistence/2019-06-27-SQLite-tutorial.md">tutorial</a></td>
   </tr>
 	<tr>
+    <td rowspan="2">Concurrency</td>
     <td>GCD</td>
-    <td></td>
     <td><a href="_posts/GCD/2019-06-19-gcd-tutorial.md">tutorial</a></td>
   </tr>
   <tr>
     <td>Operation</td>
-    <td></td>
     <td><a href="_posts/Operation/2019-06-20-operation-tutorial.md">tutorial</a></td>
   </tr>
   <tr>
