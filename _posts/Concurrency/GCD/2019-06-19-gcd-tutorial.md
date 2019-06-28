@@ -1,6 +1,8 @@
 ---
 title: GCD 入门
 excerpt: 并行并发、同步异步、队列、多读单写、组
+categories:
+  - Concurrency
 tags:
   - GCD
 toc: true

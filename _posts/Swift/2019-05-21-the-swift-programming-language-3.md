@@ -1,6 +1,8 @@
 ---
 title: 重读 Swift (5.0) 第三篇
 excerpt: Inheritance、Initialization、Deinitialization
+categories:
+  - Swift
 tags:
   - Swift
 toc: true

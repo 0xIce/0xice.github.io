@@ -1,6 +1,8 @@
 ---
 title: 重读 Swift (5.0) 第二篇
 excerpt: Control Flow、Closures、Structures and Classes、Properties、Subscripts
+categories:
+  - Swift
 tags:
   - Swift
 toc: true

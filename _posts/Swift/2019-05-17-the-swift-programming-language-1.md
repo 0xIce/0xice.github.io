@@ -1,6 +1,8 @@
 ---
 title: 重读 Swift (5.0) 第一篇
 excerpt: The Basics、Basic Operators、Strings and Characters、Collection Types
+categories:
+  - Swift
 tags:
   - Swift
 toc: true

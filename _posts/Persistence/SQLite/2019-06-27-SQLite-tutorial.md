@@ -1,8 +1,9 @@
 ---
 title: SQLite 入门
 excerpt: 创建连接数据库、建表、插入记录、更新记录、删除记录、查询、错误处理、Swift 化封装
-tags:
+categories:
   - Persistence
+tags:
   - SQLite
 toc: true
 ---

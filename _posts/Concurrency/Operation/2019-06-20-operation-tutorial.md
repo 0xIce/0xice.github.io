@@ -1,6 +1,8 @@
 ---
 title: Operation 和 OperationQueue 入门
 excerpt: 基本概念、对比GCD、暂停/恢复、任务依赖
+categories:
+  - Concurrency
 tags:
   - Operation
 toc: true

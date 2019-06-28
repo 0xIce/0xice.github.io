@@ -1,7 +1,7 @@
 ---
 title: 神经病院objc runtime入院考试
 categories:
-  - iOS
+  - Runtime
 tags:
   - Runtime
 toc: true
