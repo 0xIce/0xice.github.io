@@ -58,7 +58,18 @@ encode 和 decode 的方法支持的数据类型分为基本数据类型、byte�
 
 ### 添加初始化方法
 
+```swift
+var docPath: URL?
+  
+init(docPath: URL) {
+  super.init()
+  self.docPath = docPath    
+}
+```
 
+> 应该在第一次访问的时候把数据加载到内存中，而不是在初始化的时候就加载
+
+当创建一个全新的动物的时候
 
 ## 参考
 
