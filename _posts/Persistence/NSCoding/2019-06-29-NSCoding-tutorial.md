@@ -1,8 +1,9 @@
 ---
 title: NSCoding 入门
 excerpt: NSCoding、FileManager、NSSecureCoding、归档解档、对象存取、图片存取
-tags:
+categories:
   - Persistence
+tags:
   - NSCoding
 toc: true
 ---
