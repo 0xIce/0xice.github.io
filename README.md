@@ -35,7 +35,7 @@
   </tr>
   <tr>
     <td rowspan="5">Swift</td>
-    <td rowspan="5"></td>
+    <td rowspan="4">Swift 5.0</td>
     <td>
       <a href="_posts/Swift/2019-05-17-the-swift-programming-language-1.md">重读 Swift 第一篇</a
     </td>
@@ -56,8 +56,10 @@
     </td>
   </tr>
   <tr>
+    <td>Swift 进阶(4.0)</td>
     <td>
       <a href="_posts/Swift/2019-05-24-advanced-swift-1.md">读 Swift 进阶第一篇</a>
     </td>
 	</tr>
 </table>
+
