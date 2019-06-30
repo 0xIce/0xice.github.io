@@ -32,8 +32,8 @@ RxSwift-docs:
     children:
       - title: "为什么使用 Rx"
         url: /rxswift/RxSwift-why/
-      # - title: "开始使用"
-      #   url: /
+      - title: "开始使用 RxSwift"
+        url: /
       # - title: "核心概念"
       #   url: /
       # - title: "Tips"
