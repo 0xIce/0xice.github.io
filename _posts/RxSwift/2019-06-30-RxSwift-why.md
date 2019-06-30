@@ -5,6 +5,9 @@ categories:
 tags:
   - RxSwift
 toc: true
+author_profile: false
+sidebar:
+  nav: RxSwift-docs
 ---
 
 ## 为什么使用 Rx
