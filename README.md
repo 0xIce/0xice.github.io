@@ -15,6 +15,11 @@
     <th>Input</th>
   </tr>
   <tr>
+    <td>RxSwift</td>
+    <td></td>
+    <td><a href="_posts/RxSwift/2019-06-30-RxSwift-why.md">为什么使用 Rx</a></td>
+  </tr>
+  <tr>
     <td rowspan="2">Persistence</td>
     <td>SQLite</td>
     <td><a href="_posts/Persistence/SQLite/2019-06-27-SQLite-tutorial.md">tutorial</a></td>
