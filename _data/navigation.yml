@@ -30,7 +30,7 @@ main:
 RxSwift-docs:
   - title: RxSwift 文档
     children:
-      - title: "为什么使用 RxSwift"
+      - title: "为什么使用 Rx"
         url: /rxswift/RxSwift-why/
       # - title: "开始使用"
       #   url: /
