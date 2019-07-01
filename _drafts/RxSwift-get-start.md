@@ -9,13 +9,11 @@ author_profile: false
 sidebar:
   nav: RxSwift-docs
 ---
-## 开始使用
+> 信号即序列
 
 `RxSwift` 项目尝试与 [ReactiveX.io](http://reactivex.io/) 项目保持一致，一般的跨平台的文档和指导同样适用于 `RxSwift`
 
-## 信号即序列
-
-### 基础
+## Basic
 
 观察者模式(`Observable<Element>` sequence)和普通的 sequence 的[等价](MathBehindRx.md)是 Rx 中最重要的概念。
 
@@ -54,18 +52,18 @@ Sequences 是一个简单熟悉的概念，**容易可视化**
 ---tap-tap-------tap--->
 ```
 
-These are called marble diagrams. There are more marble diagrams at [rxmarbles.com](http://rxmarbles.com).
+这些被称为弹珠图，更多的弹珠图在<http://rxmarbles.com>
 
-If we were to specify sequence grammar as a regular expression it would look like:
+下面举例说明 Rx 中 sequence 的语法：
 
-**next\* (error | completed)?**
+**next\* (error \| completed)?**
 
-This describes the following:
+表达的信息如下:
 
-* **Sequences can have 0 or more elements.**
-* **Once an `error` or `completed` event is received, the sequence cannot produce any other element.**
+* **Sequences 可以有 0 个或者多个元素**
+* **一个 `error` 或者 `completed` 事件被接收之后，这个序列就不能产生其他的元素了**
 
-Sequences in Rx are described by a push interface (aka callback).
+Rx 中使用推送接口(回调)来描述序列
 
 ```swift
 enum Event<Element>  {
@@ -83,23 +81,23 @@ protocol ObserverType {
 }
 ```
 
-**When a sequence sends the `completed` or `error` event all internal resources that compute sequence elements will be freed.**
+**当一个序列发送 `completed` 或 `error` 事件的时候，这个序列用来计算元素占用的所有的内部资源将被释放**
 
-**To cancel production of sequence elements and free resources immediately, call `dispose` on the returned subscription.**
+**如果要取消序列元素的产生并且立马释放资源，对返回的订阅调用 `dispose` 方法**
 
-If a sequence terminates in finite time, not calling `dispose` or not using `disposed(by: disposeBag)` won't cause any permanent resource leaks. However, those resources will be used until the sequence completes, either by finishing production of elements or returning an error.
+如果一个序列会在有限的时间内结束，不调用 `dispose` 或者 `disposed(by: disposeBag)` 不会造成永久的资源泄漏。然而，这些资源会在序列完成之前一直被使用，序列完成的情况包括结束了元素的产生或者返回了错误。
 
-If a sequence does not terminate on its own, such as with a series of button taps, resources will be allocated permanently unless `dispose` is called manually, automatically inside of a `disposeBag`, with the `takeUntil` operator, or in some other way.
+如果一个序列不会自己终止，比如按钮的连续点击，资源会一直被占用直到 `dispose` 被手动调用，在 `disposeBag` 中被自动调用，使用了 `takeUntil` 操作符，或者其它的方式。
 
-**Using dispose bags or `takeUntil` operator is a robust way of making sure resources are cleaned up. We recommend using them in production even if the sequences will terminate in finite time.**
+使用 `DisposeBag` 或者 `takeUntil` 操作符来保证资源被正确清理是鲁棒性比较好的一种方式。我们推荐在生产中使用它们，即使序列会在有限的时间内结束
 
-If you are curious why `Swift.Error` isn't generic, you can find the explanation [here](DesignRationale.md#why-error-type-isnt-generic).
+如果你好奇为什么 `Swift.Error` 不是范型，你可以在[这里](DesignRationale.md#why-error-type-isnt-generic)找到解释
 
-### Disposing
+## Dispose
 
-There is one additional way an observed sequence can terminate. When we are done with a sequence and we want to release all of the resources allocated to compute the upcoming elements, we can call `dispose` on a subscription.
+还有另外的方式可以终止被订阅的序列。当我们结束了一个序列想要释放用来计算和传递元素所占用的资源时，可以通过一个订阅调用 `dispose`
 
-Here is an example with the `interval` operator.
+下面是一个使用 `interval` 操作符的例子：
 
 ```swift
 let scheduler = SerialDispatchQueueScheduler(qos: .default)
@@ -124,26 +122,27 @@ This will print:
 5
 ```
 
-Note that you usually do not want to manually call `dispose`; this is only an educational example. Calling dispose manually is usually a bad code smell. There are better ways to dispose of subscriptions such as `DisposeBag`, the `takeUntil` operator, or some other mechanism.
+> 通常来说你不需要手动调用 `dispose` 方法，这里仅仅是为了说明
 
-So can this code print something after the `dispose` call is executed? The answer is: it depends.
+手动调用 `dispose` 通常来说可能会造成坏的代码，可以用更好的方式来清理订阅，比如 `DisposeBag`，`takeUntil` 操作符，或者其它的机制。
 
-* If the `scheduler` is a **serial scheduler** (ex. `MainScheduler`) and `dispose` is called **on the same serial scheduler**, the answer is **no**.
+所以在 `dispose` 方法调用之后还有有东西打印吗？答案是：看情况
 
-* Otherwise it is **yes**.
+* 如果 `scheduler` 是 **serial scheduler** (如：``MainScheduler``) 并且 `dispose` 方法在**同一个 serial scheduler** 上调用，答案就是 **no**
+* 否则就是 **yes**
 
-You can find out more about schedulers [here](Schedulers.md).
+你可以在[这里](Schedulers.md)找到更多关于 scheduler 的信息
 
-You simply have two processes happening in parallel.
+简单来说你有两个并行的处理过程：
 
-* one is producing elements
-* the other is disposing of the subscription
+* 一个在产生元素
+* 另一个在清理订阅
 
-The question "Can something be printed after?" does not even make sense in the case that those processes are on different schedulers.
+“在调用 `dispose` 之后还可以有东西打印吗？”的问题在上面所说的两个处理过程运行在不同的 schedulers 上的时候根本就说不通。
 
-A few more examples just to be sure (`observeOn` is explained [here](Schedulers.md)).
+看看其它的例子来验证一下(`observeOn` 在[这里](Schedulers.md)有解释)
 
-In case we have something like:
+假设我们有如下的代码：
 
 ```swift
 let subscription = Observable<Int>.interval(.milliseconds(300), scheduler: scheduler)
@@ -158,9 +157,9 @@ subscription.dispose() // called from main thread
 
 ```
 
-**After the `dispose` call returns, nothing will be printed. That is guaranteed.**
+**在 `dispose` 调用之后，不会再有东西打印。这是可以保证的**
 
-Also, in this case:
+再看下面的例子：
 
 ```swift
 let subscription = Observable<Int>.interval(.milliseconds(300), scheduler: scheduler)
@@ -175,27 +174,27 @@ subscription.dispose() // executing on same `serialScheduler`
 
 ```
 
-**After the `dispose` call returns, nothing will be printed. That is guaranteed.**
+**在 `dispose` 调用之后，不会再有东西打印。这是可以保证的**
 
-#### Dispose Bags
+### Dispose Bags
 
-Dispose bags are used to return ARC like behavior to RX.
+Dispose bags 给了 Rx 类似于 ARC 的表现
 
-When a `DisposeBag` is deallocated, it will call `dispose` on each of the added disposables.
+当一个 `DisposeBag` 被释放的时候，它会对添加进 `DisposeBag` 中的每一个 `disposable` 对象都调用一次 `dispose` 方法
 
-It does not have a `dispose` method and therefore does not allow calling explicit dispose on purpose. If immediate cleanup is required, we can just create a new bag.
+`DisposeBag` 没有 `dispose` 方法，所以不能手动调用 dispose 来清理资源，如果需要立刻清理资源，可以创建一个新的 bag 来替换原来的
 
 ```swift
   self.disposeBag = DisposeBag()
 ```
 
-This will clear old references and cause disposal of resources.
+这样可以清理原来的引用并清理资源
 
-If that explicit manual disposal is still wanted, use `CompositeDisposable`. **It has the wanted behavior but once that `dispose` method is called, it will immediately dispose any newly added disposable.**
+如果还是想要手动地显式清理，可以使用 `CompositeDisposable`。**它有我们期望的和 `dispose` 一样的表现，但是实现的不同是，当调用 `dispose` 方法时，它会立马清理新加进来的 `disposable` 对象**
 
-#### Take until
+### Take until
 
-Additional way to automatically dispose subscription on dealloc is to use `takeUntil` operator.
+还可以使用 `takeUntil` 操作符来实现在 `dealloc` 的时候自动清理订阅
 
 ```swift
 sequence
@@ -207,13 +206,13 @@ sequence
 
 ## Implicit `Observable` guarantees
 
-There is also a couple of additional guarantees that all sequence producers (`Observable`s) must honor.
+还有一些另外的保证，所有的序列 producers(`Observable`s)必须遵守
 
-It doesn't matter on which thread they produce elements, but if they generate one element and send it to the observer `observer.on(.next(nextElement))`, they can't send next element until `observer.on` method has finished execution.
+它们在哪个线程生成元素并不重要，但是如果它们生成了一个元素然后把生成的元素发送到观察者 `observer.on(.next(nextElement))`，它们不能再发送下一个元素知道 `observer.on` 方法执行结束
 
-Producers also cannot send terminating `.completed` or `.error` in case `.next` event hasn't finished.
+并且在 `.next` 没有结束的时候 Producers 不能发送终止事件 `.completed` 或者 `.error`
 
-In short, consider this example:
+简言之，考虑下面的例子：
 
 ```swift
 someObservable
@@ -224,7 +223,7 @@ someObservable
   }
 ```
 
-This will always print:
+打印顺序一定是：
 
 ```
 Event processing started
@@ -235,7 +234,7 @@ Event processing started
 Event processing ended
 ```
 
-It can never print:
+绝对不会出现：
 
 ```
 Event processing started
@@ -246,15 +245,17 @@ Event processing ended
 
 ## Creating your own `Observable` (aka observable sequence)
 
-There is one crucial thing to understand about observables.
+关于 `Observable` 有一个重要的事情需要理解
 
-**When an observable is created, it doesn't perform any work simply because it has been created.**
+**当一个 observable 被创建的时候，它并没有执行任何工作**
 
-It is true that `Observable` can generate elements in many ways. Some of them cause side effects and some of them tap into existing running processes like tapping into mouse events, etc.
+> 比如说一个网络请求的 observable 被创建，实际并没有发出网络请求，被订阅之后才发起请求
 
-**However, if you just call a method that returns an `Observable`, no sequence generation is performed and there are no side effects. `Observable` just defines how the sequence is generated and what parameters are used for element generation. Sequence generation starts when `subscribe` method is called.**
+ `Observable` 可以通过很多种方式生成元素，有些会引起副作用，有些会进入现有的运行进程中，比如鼠标的点击事件等。
 
-E.g. Let's say you have a method with similar prototype:
+**但是，如果你只是调用一个方法返回了 `Observable`，并没有执行序列的生成并且也没有副作用。`Observable` 仅仅定义了序列该如何生成和什么使用什么参数生成。序列的实际生成发生在 `subscribe` 方法调用之后。**
+
+看下面的例子，假设你有一个类似原型的方法：
 
 ```swift
 func searchWikipedia(searchTerm: String) -> Observable<Results> {}
@@ -273,11 +274,11 @@ let cancel = searchForMe
 
 ```
 
-There are a lot of ways to create your own `Observable` sequence. The easiest way is probably to use the `create` function.
+有很多方法可以创建自定义的 `Observable` 序列，最简单的方式大概就是使用 `create` 方法
 
-RxSwift provides a method that creates a sequence which returns one element upon subscription. That method is called `just`. Let's write our own implementation of it:
+RxSwift 提供了一个方法来创建一个返回一个元素给订阅者的序列，这个方法就是 `just`，下面是我们自己的实现。
 
-*This is the actual implementation*
+*具体的实现*
 
 ```swift
 func myJust<E>(_ element: E) -> Observable<E> {
@@ -294,23 +295,23 @@ myJust(0)
     })
 ```
 
-This will print:
+上面的代码将会打印:
 
 ```
 0
 ```
 
-Not bad. So what is the `create` function?
+那什么是 `create` 方法呢？
 
-It's just a convenience method that enables you to easily implement `subscribe` method using Swift closures. Like `subscribe` method it takes one argument, `observer`, and returns disposable.
+它只是一个可以让你容易使用 Swift 的闭包实现 `sbuscribe` 方法的便利方法。就像 `subscribe` 方法一样，`create` 方法需要一个参数，`observer`，然后返回 `disposable` 对象
 
-Sequence implemented this way is actually synchronous. It will generate elements and terminate before `subscribe` call returns disposable representing subscription. Because of that it doesn't really matter what disposable it returns, process of generating elements can't be interrupted.
+序列的这种实现实际上是同步的，它将会生成元素然后在 `subscribe` 调用返回 `disposable` 之前终止。因此，返回什么 `disposable` 并不重要，生成元素的过程不会被打断。
 
-When generating synchronous sequences, the usual disposable to return is singleton instance of `NopDisposable`.
+当生成同步序列的时候，通常返回的 `disposable` 对象是 `NopDisposable` 的单例。
 
-Lets now create an observable that returns elements from an array.
+来看另一个例子，创建 `observable` 返回一个数组中的元素
 
-*This is the actual implementation*
+*具体的实现如下*
 
 ```swift
 func myFrom<E>(_ sequence: [E]) -> Observable<E> {
@@ -345,7 +346,7 @@ stringCounter
 print("Ended ----")
 ```
 
-This will print:
+输出结果是：
 
 ```
 Started ----
@@ -359,9 +360,9 @@ Ended ----
 
 ## Creating an `Observable` that performs work
 
-Ok, now something more interesting. Let's create that `interval` operator that was used in previous examples.
+尝试一下更有意思的事情，创建一个前面用到过的 `interval` 操作符
 
-*This is equivalent of actual implementation for dispatch queue schedulers*
+*下面的实现等价于 dispatch queue schedulers*
 
 ```swift
 func myInterval(_ interval: DispatchTimeInterval) -> Observable<Int> {
@@ -408,7 +409,7 @@ subscription.dispose()
 print("Ended ----")
 ```
 
-This will print
+输出结果是
 ```
 Started ----
 Subscribed
@@ -421,7 +422,7 @@ Disposed
 Ended ----
 ```
 
-What if you would write
+如果写成下面这样
 
 ```swift
 let counter = myInterval(.milliseconds(100))
@@ -448,7 +449,7 @@ subscription2.dispose()
 print("Ended ----")
 ```
 
-This would print:
+输出结果是
 
 ```
 Started ----
@@ -474,18 +475,18 @@ Disposed
 Ended ----
 ```
 
-**Every subscriber upon subscription usually generates it's own separate sequence of elements. Operators are stateless by default. There are vastly more stateless operators than stateful ones.**
+**每个对 `subscription` 的订阅者通常生成自己独立的元素序列。操作符默认是无状态的。无状态的操作符远远多余有状态的**
 
 ## Sharing subscription and `share` operator
 
-But what if you want that multiple observers share events (elements) from only one subscription?
+如果我们希望多个 observer 通过同一个订阅共享事件(元素)呢？
 
-There are two things that need to be defined.
+有两个事情需要定义：
 
-* How to handle past elements that have been received before the new subscriber was interested in observing them (replay latest only, replay all, replay last n)
-* How to decide when to fire that shared subscription (refCount, manual or some other algorithm)
+* 如何去处理在新的订阅者订阅之前已经被传递过的元素（重传最后一个，重传所有，重传最后的 n 个）
+* 如何决定什么时候触发共享的订阅（引用数，手动触发，其它的算法）
 
-The usual choice is a combination of `replay(1).refCount()`, aka `share(replay: 1)`.
+通常的选择是  `replay(1).refCount()` 的组合，也就是 `share(replay: 1)`
 
 ```swift
 let counter = myInterval(.milliseconds(100))
@@ -528,7 +529,7 @@ First 3
 Second 3
 First 4
 Second 4
-First 5
+# First 5，应该没有这行输出，原文档错误
 Second 5
 Second 6
 Second 7
@@ -538,11 +539,11 @@ Disposed
 Ended ----
 ```
 
-Notice how now there is only one `Subscribed` and `Disposed` event.
+> 现在只有一个 `Subscribed` 和 `Disposed` 事件
 
-Behavior for URL observables is equivalent.
+URL observables 的表现也是等价的
 
-This is how HTTP requests are wrapped in Rx. It's pretty much the same pattern like the `interval` operator.
+下面是用 Rx 对 HTTP 请求的封装，和 `interval` 的模式非常相近
 
 ```swift
 extension Reactive where Base: URLSession {
@@ -576,27 +577,25 @@ extension Reactive where Base: URLSession {
 
 ## Operators
 
-There are numerous operators implemented in RxSwift.
+RxSwift 实现了很多操作符
 
-Marble diagrams for all operators can be found on [ReactiveX.io](http://reactivex.io/)
+所有操作符的弹珠图可以查看<http://reactivex.io/>
 
-Almost all operators are demonstrated in [Playgrounds](../Rx.playground).
+几乎所有的操作符都在 [Playgrounds](#Playgrounds) 中有演示
 
-To use playgrounds please open `Rx.xcworkspace`, build `RxSwift-macOS` scheme and then open playgrounds in `Rx.xcworkspace` tree view.
+如果你需要一个操作符但是又不知道怎么找到它，可以查看[操作符决策树](http://reactivex.io/documentation/operators.html#tree)
 
-In case you need an operator, and don't know how to find it there is a [decision tree of operators](http://reactivex.io/documentation/operators.html#tree).
+### Custom operator
 
-### Custom operators
-
-There are two ways how you can create custom operators.
+有两种方式可以可以创建自定义的操作符
 
 #### Easy way
 
-All of the internal code uses highly optimized versions of operators, so they aren't the best tutorial material. That's why it's highly encouraged to use standard operators.
+内部的代码都是用了高度优化版本的操作符，所以他们不是最好的辅导材料。这也是为什么鼓励使用标准操作符的原因
 
-Fortunately there is an easier way to create operators. Creating new operators is actually all about creating observables, and previous chapter already describes how to do that.
+幸运的有一种简单的方式去创建操作符。创建新的操作符实际上就是创建 `observable`，并且前面的章节已经描述了怎么做
 
-Lets see how an unoptimized map operator can be implemented.
+下面我们来看看如何实现一个未优化过的 `map` 操作符
 
 ```swift
 extension ObservableType {
@@ -620,7 +619,7 @@ extension ObservableType {
 }
 ```
 
-So now you can use your own map:
+调用我们自定义的 `map`:
 
 ```swift
 let subscription = myInterval(.milliseconds(100))
@@ -632,7 +631,7 @@ let subscription = myInterval(.milliseconds(100))
     })
 ```
 
-This will print:
+输出的结果：
 
 ```
 Subscribed
@@ -648,11 +647,11 @@ This is simply 8
 ...
 ```
 
-### Life happens
+#### Life happens
 
-So what if it's just too hard to solve some cases with custom operators? You can exit the Rx monad, perform actions in imperative world, and then tunnel results to Rx again using `Subject`s.
+如果在某些情况下用自定义的操作符难以解决问题呢？你可以跳出 Rx 的单一世界，用命令式编程的方式执行任务，然后使用 `Subject` 再将结果再传递给 Rx
 
-This isn't something that should be practiced often, and is a bad code smell, but you can do it.
+这不是一件可以经常做的事情，可能会导致不良代码，但是还是可以实现的。
 
 ```swift
   let magicBeings: Observable<MagicBeing> = summonFromMiddleEarth()
@@ -684,7 +683,7 @@ This isn't something that should be practiced often, and is a bad code smell, bu
     // ....
 ```
 
-Every time you do this, somebody will probably write this code somewhere:
+当你这么做的时候，其他人可能会在其它地方些这样的代码👇
 
 ```swift
   kittens
@@ -694,31 +693,35 @@ Every time you do this, somebody will probably write this code somewhere:
     .disposed(by: disposeBag)
 ```
 
-So please try not to do this.
+所以尽量不要这样做
 
 ## Playgrounds
 
-If you are unsure how exactly some of the operators work, [playgrounds](../Rx.playground) contain almost all of the operators already prepared with small examples that illustrate their behavior.
+如果你不确定某些操作符如何工作，[playgrounds](https://github.com/ReactiveX/RxSwift/tree/master/Rx.playground) 几乎包括了所有的操作符，并且准备了小例子来描述他们的表现
 
-**To use playgrounds please open Rx.xcworkspace, build RxSwift-macOS scheme and then open playgrounds in Rx.xcworkspace tree view.**
+使用 playgrounds:
 
-**To view the results of the examples in the playgrounds, please open the `Assistant Editor`. You can open `Assistant Editor` by clicking on `View > Assistant Editor > Show Assistant Editor`**
+1. 打开 Rx.xcworkspace
+2. build RxSwift 的 macOS scheme
+3. 打开 Rx.playground
+
+查看 playgrounds 中例子的结果，需要打开 `Assistant Editor`，`View > Assistant Editor > Show Assistant Editor`
 
 ## Error handling
 
-There are two error mechanisms.
+有两种错误处理机制
 
 ### Asynchronous error handling mechanism in observables
 
-Error handling is pretty straightforward. If one sequence terminates with error, then all of the dependent sequences will terminate with error. It's usual short circuit logic.
+错误处理非常直接，如果一个序列因为错误终止，那么所有依赖的序列都会因为错误终止，符合通常的短路逻辑
 
-You can recover from failure of observable by using `catch` operator. There are various overloads that enable you to specify recovery in great detail.
+你可以使用 `catch` 操作符来恢复 `observable` 的失败，`catch` 操作符中还在基本的 `error` 信息基础上有各种各样的补充信息，可以让你以更细节的方式恢复序列
 
-There is also `retry` operator that enables retries in case of errored sequence.
+还可以使用 `retry` 操作符来重试错误的序列
 
 ## Debugging Compile Errors
 
-When writing elegant RxSwift/RxCocoa code, you are probably relying heavily on compiler to deduce types of `Observable`s. This is one of the reasons why Swift is awesome, but it can also be frustrating sometimes.
+当编写优雅的 `RxSwift/RxCocoa` 代码的时候，你可能强烈依赖于编译器来推断 `Observable` 的类型，这是 Swift 优秀的原因，但是有时候也会令人泄气
 
 ```swift
 images = word
@@ -731,7 +734,7 @@ images = word
       }
 ```
 
-If compiler reports that there is an error somewhere in this expression, I would suggest first annotating return types.
+如果编译器报告了错误，可以先增加 `catch` 的返回值声明
 
 ```swift
 images = word
@@ -744,7 +747,7 @@ images = word
       }
 ```
 
-If that doesn't work, you can continue adding more type annotations until you've localized the error.
+如果不成功，可以继续添加更多的类型声明直到定位到了错误
 
 ```swift
 images = word
@@ -757,15 +760,15 @@ images = word
       }
 ```
 
-**I would suggest first annotating return types and arguments of closures.**
+**建议首先增加闭包的返回值和参数的声明**
 
-Usually after you have fixed the error, you can remove the type annotations to clean up your code again.
+通常在你解决了错误之后，你就可以删除添加的声明以保持代码的整洁
 
 ## Debugging
 
-Using debugger alone is useful, but usually using `debug` operator will be more efficient. `debug` operator will print out all events to standard output and you can add also label those events.
+只使用调试器是有用的，但是通常使用 `debug` 操作符将会更加的有效率。`debug` 操作符会打印所有的事件到标准输出并且你可以添加自定义的标签
 
-`debug` acts like a probe. Here is an example of using it:
+`debug` 的表现类似于探针，下面是一个使用例子：
 
 ```swift
 let subscription = myInterval(.milliseconds(100))
@@ -801,7 +804,7 @@ This is simply 4
 Disposed
 ```
 
-You can also easily create your version of the `debug` operator.
+创建自定义版本的 `debug` 操作符也比较简单
 
 ```swift
 extension ObservableType {
@@ -831,17 +834,18 @@ extension ObservableType {
 ```
 
 ### Enabling Debug Mode
-In order to [Debug memory leaks using `RxSwift.Resources`](#debugging-memory-leaks) or [Log all HTTP requests automatically](#logging-http-traffic), you have to enable Debug Mode.
 
-In order to enable debug mode, a `TRACE_RESOURCES` flag must be added to the RxSwift target build settings, under _Other Swift Flags_.
+为了可以 [Debug memory leaks using `RxSwift.Resources`](#debugging-memory-leaks) 或者 [Log all HTTP requests automatically](#logging-http-traffic)，你必须开启 Debug 模式
 
-For further discussion and instructions on how to set the `TRACE_RESOURCES` flag for Cocoapods & Carthage, see [#378](https://github.com/ReactiveX/RxSwift/issues/378)
+为了开启 debug 模式，一个 `TRACE_RESOURCES` 标志必须加到 RxSwift target 的 build settings 中，在 Other Swift Flags 选项下
+
+对于如何在 Cocoapods 和 Carthage 中添加 `TRACE_RESOURCES` 标志的进一步的讨论和介绍，查看 [#378](https://github.com/ReactiveX/RxSwift/issues/378)
 
 ## Debugging memory leaks
 
-In debug mode Rx tracks all allocated resources in a global variable `Resources.total`.
+在 debug 模式下，Rx 用 `Resources.total` 追踪所有分配的资源
 
-In case you want to have some resource leak detection logic, the simplest method is just printing out `RxSwift.Resources.total` periodically to output.
+如果你想添加一些资源泄漏的检测逻辑，最简单的方法就是周期输出 `RxSwift.Resources.total`
 
 ```swift
     /* add somewhere in
@@ -853,24 +857,24 @@ In case you want to have some resource leak detection logic, the simplest method
         })
 ```
 
-Most efficient way to test for memory leaks is:
-* navigate to your screen and use it
-* navigate back
-* observe initial resource count
-* navigate second time to your screen and use it
-* navigate back
-* observe final resource count
+测试内存泄漏最有效率的方式是：
 
-In case there is a difference in resource count between initial and final resource counts, there might be a memory
-leak somewhere.
+* 打开你的页面并使用
+* 关闭你的页面
+* 观察初始的资源数量
+* 再次打开你的页面并使用
+* 关闭你的页面
+* 观察最终的资源数量
 
-The reason why 2 navigations are suggested is because first navigation forces loading of lazy resources.
+如果开始的资源数量和最终的资源数量不同，那么就有可能出现了内存泄漏
+
+两次打开页面的原因是第一次打开强制加载了 `lazy` 的资源
 
 ## KVO
 
-KVO is an Objective-C mechanism. That means that it wasn't built with type safety in mind. This project tries to solve some of the problems.
+KVO 是一种 Objective-C 的机制，意味着它不是伴随着类型安全来构建的，Rx 也在尝试解决一些这样的问题
 
-There are two built in ways this library supports KVO.
+Rx 有两种内建的支持 KVO 的方式
 
 ```swift
 // KVO
@@ -886,9 +890,9 @@ extension Reactive where Base: NSObject {
 #endif
 ```
 
-Example how to observe frame of `UIView`.
+一个观察 `UIView` 的 frame 的例子
 
-**WARNING: UIKit isn't KVO compliant, but this will work.**
+**警告：UIKit 不服从 KVO， 但它可以工作**
 
 ```swift
 view
@@ -910,11 +914,11 @@ view
 
 ### `rx.observe`
 
-`rx.observe` is more performant because it's just a simple wrapper around KVO mechanism, but it has more limited usage scenarios
+`rx.observe` 更高效，因为它这是对 KVO 机制的一个简单封装，但是使用场景也更加局限
 
-* it can be used to observe paths starting from `self` or from ancestors in ownership graph (`retainSelf = false`)
-* it can be used to observe paths starting from descendants in ownership graph (`retainSelf = true`)
-* the paths have to consist only of `strong` properties, otherwise you are risking crashing the system by not unregistering KVO observer before dealloc.
+* 可以用在观察 `self` 开始的或者所有权图(`retainSelf = false`) 的祖先(持有关系)开始的 path
+* 可以用在观察所有权图(`retainSelf = false`)的后代(持有关系)开始的 path
+* path 只能包含 `strong` 修饰的属性，否则可能会有因为在 dealloc 之前没有取消注册 KVO 而导致 crash
 
 E.g.
 
@@ -924,12 +928,12 @@ self.rx.observe(CGRect.self, "view.frame", retainSelf: false)
 
 ### `rx.observeWeakly`
 
-`rx.observeWeakly` is somewhat slower than `rx.observe` because it has to handle object deallocation in case of weak references.
+`rx.observeWeakly` 有时相对于 `rx.observe` 会有一点慢，因为在弱引用的时候需要处理对象的释放
 
-It can be used in all cases where `rx.observe` can be used and additionally
+`rx.observe` 适用的场景 `rx.observeWeakly` 都可以用，另外还可以用在
 
-* because it won't retain observed target, it can be used to observe arbitrary object graph whose ownership relation is unknown
-* it can be used to observe `weak` properties
+* 因为它不会 retain 观察的对象，它可以用在任何持有关系不明确的对象上
+* 可以用来观察 `weak` 属性
 
 E.g.
 
@@ -939,41 +943,41 @@ someSuspiciousViewController.rx.observeWeakly(Bool.self, "behavingOk")
 
 ### Observing structs
 
-KVO is an Objective-C mechanism so it relies heavily on `NSValue`.
+KVO 是一个 OC 的机制，所以它严重依赖于 `NSValue`
 
-**RxCocoa has built in support for KVO observing of `CGRect`, `CGSize` and `CGPoint` structs.**
+**RxCocoa 内建了 KVO 观察 `CGRect`, `CGSize` 和 `CGPoint` 结构体的支持**
 
-When observing some other structures it is necessary to extract those structures from `NSValue` manually.
+当观察其它结构体的时候，需要手动从 `NSValue` 提取出这些结构体
 
-[Here](../RxCocoa/Foundation/KVORepresentable+CoreGraphics.swift) are examples how to extend KVO observing mechanism and `rx.observe*` methods for other structs by implementing `KVORepresentable` protocol.
+[这里](../RxCocoa/Foundation/KVORepresentable+CoreGraphics.swift)是一些例子，描述了如何通过实现  `KVORepresentable`  协议来对其它结构体提取 KVO 观察机制和  `rx.observe*` 方法
 
 ## UI layer tips
 
-There are certain things that your `Observable`s need to satisfy in the UI layer when binding to UIKit controls.
+当绑定到 UIKit 的 control 上时，你的 `Observable` 必须要满足 UI 层的一些条件
 
 ### Threading
 
-`Observable`s need to send values on `MainScheduler`(UIThread). That's just a normal UIKit/Cocoa requirement.
+`Observable` 需要在  `MainScheduler`(UIThread) 发送值，这是 UIKit/Cocoa 的要求
 
-It is usually a good idea for your APIs to return results on `MainScheduler`. In case you try to bind something to UI from background thread, in **Debug** build RxCocoa will usually throw an exception to inform you of that.
+让你的 API 在  `MainScheduler` 返回结果通常是一个好主意。如果你尝试在后台线程绑定一些东西到 UI 上时，在 Debug 的 build 模式下，RxCocoa 通常会报错一个错误来提示你
 
-To fix this you need to add `observeOn(MainScheduler.instance)`.
+你需要添加 `observeOn(MainScheduler.instance)` 来解决这个问题
 
-**URLSession extensions don't return result on `MainScheduler` by default.**
+**URLSession extension 默认不在 `MainScheduler` 返回结果**
 
 ### Errors
 
-You can't bind failure to UIKit controls because that is undefined behavior.
+你不能绑定失败到 UIKit control 上，因为那是未定义的表现
 
-If you don't know if `Observable` can fail, you can ensure it can't fail using `catchErrorJustReturn(valueThatIsReturnedWhenErrorHappens)`, **but after an error happens the underlying sequence will still complete**.
+如果你不知道 `Observable` 是否会失败，你可以使用 `catchErrorJustReturn(valueThatIsReturnedWhenErrorHappens)` 来保证它不会失败，**但是当错误发生之后，它的序列仍会完成**
 
-If the wanted behavior is for underlying sequence to continue producing elements, some version of `retry` operator is needed.
+如果希望序列继续生产元素，就需要一些版本的 `retry`操作符
 
 ### Sharing subscription
 
-You usually want to share subscription in the UI layer. You don't want to make separate HTTP calls to bind the same data to multiple UI elements.
+你通常希望在 UI 层共享订阅，你不希望不同的 HTTP 请求绑定同样的数据到多个 UI 控件上去
 
-Let's say you have something like this:
+假设你有下面的实现：
 
 ```swift
 let searchResults = searchText
@@ -988,27 +992,25 @@ let searchResults = searchText
     .share(replay: 1)    // <- notice the `share` operator
 ```
 
-What you usually want is to share search results once calculated. That is what `share` means.
+通常你想要的是计算之后共享搜索的结果，这就是 `share` 的意义
 
-**It is usually a good rule of thumb in the UI layer to add `share` at the end of transformation chain because you really want to share calculated results. You don't want to fire separate HTTP connections when binding `searchResults` to multiple UI elements.**
+**UI 层中，在变换链的最后添加 `shard` 通常是一个好的规则，因为你最想共享计算的结果。你不想在绑定 `searchResults` 到多个 UI 控件的时候触发不同的 HTTP 连接**
 
-**Also take a look at `Driver` unit. It is designed to transparently wrap those `share` calls, make sure elements are observed on main UI thread and that no error can be bound to UI.**
+**也看一下 `Driver` 单元。它是被设计用来透明地封装这些 `share` 调用的，确保元素在主线程被观察并且没有错误绑定到 UI 上**
 
 ## Making HTTP requests
 
-Making http requests is one of the first things people try.
+制作 HTTP 请求是人们尝试的第一件事
 
-You first need to build `URLRequest` object that represents the work that needs to be done.
+首先你要创建 `URLRequest` 对象来表示需要被完成的工作，Request 确定请求类型(GET, POST…)，是否有请求体，请求参数等
 
-Request determines is it a GET request, or a POST request, what is the request body, query parameters ...
-
-This is how you can create a simple GET request
+下面是一个简单的 GET 请求的例子
 
 ```swift
 let req = URLRequest(url: URL(string: "http://en.wikipedia.org/w/api.php?action=parse&page=Pizza&format=json"))
 ```
 
-If you want to just execute that request outside of composition with other observables, this is what needs to be done.
+如果你想要仅执行了这个请求而不是和其它的 `observable` 组合，下面的代码就可以实现
 
 ```swift
 let responseJSON = URLSession.shared.rx.json(request: req)
@@ -1027,12 +1029,11 @@ Thread.sleep(forTimeInterval: 3.0)
 
 // if you want to cancel request after 3 seconds have passed just call
 cancelRequest.dispose()
-
 ```
 
-**URLSession extensions don't return result on `MainScheduler` by default.**
+**URLSession extensions 默认不会在 `MainScheduler`  返回结果**
 
-In case you want a more low level access to response, you can use:
+如果你想要更底层的 response，你可以：
 
 ```swift
 URLSession.shared.rx.response(myURLRequest)
@@ -1057,7 +1058,7 @@ URLSession.shared.rx.response(myURLRequest)
 ```
 ### Logging HTTP traffic
 
-In debug mode RxCocoa will log all HTTP request to console by default. In case you want to change that behavior, please set `Logging.URLRequests` filter.
+在 debug 模式下，RxCocoa 默认会记录所有的 HTTP 请求到控制台中，如果你想改变这个表现，可以设置 `Logging.URLRequests` 过滤器
 
 ```swift
 // read your own configuration
@@ -1076,9 +1077,12 @@ public struct Logging {
 
 ## RxDataSources
 
-... is a set of classes that implement fully functional reactive data sources for `UITableView`s and `UICollectionView`s.
+是一个实现了 `UITableView`s 和 `UICollectionView` 全功能交互数据源的类集合
 
-RxDataSources are bundled [here](https://github.com/RxSwiftCommunity/RxDataSources).
+RxDataSources  打包在[这里](https://github.com/RxSwiftCommunity/RxDataSources).
 
-Fully functional demonstration how to use them is included in the [RxExample](../RxExample) project.
+如何使用它们的全功能示范在 [RxExample](../RxExample) 项目
 
+## 参考
+
+1. https://medium.com/gett-engineering/rxswift-share-ing-is-caring-341557714a2d
