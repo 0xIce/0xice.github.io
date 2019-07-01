@@ -33,7 +33,7 @@ RxSwift-docs:
       - title: "为什么使用 Rx"
         url: /rxswift/RxSwift-why/
       - title: "开始使用 RxSwift"
-        url: /
+        url: /rxswift/RxSwift-get-start/
       # - title: "核心概念"
       #   url: /
       # - title: "Tips"
