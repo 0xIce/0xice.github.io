@@ -299,7 +299,7 @@ extension Reactive where Base: URLSession {
 
 这里是庞大的[所有 Rx 操作符](http://reactivex.io/documentation/operators.html)的列表
 
-每一个操作符，都有一个[图解](http://reactivex.io/documentation/operators/retry.html)来帮助解释它的实现
+每一个操作符，都有一个[弹珠图](http://reactivex.io/documentation/operators/retry.html)来帮助解释它的实现
 
 如果你需要一些没有在列表中的操作符，可以自定义操作符
 
