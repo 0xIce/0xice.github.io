@@ -13,7 +13,7 @@ sidebar:
 
 `RxSwift` 项目尝试与 [ReactiveX.io](http://reactivex.io/) 项目保持一致，一般的跨平台的文档和指导同样适用于 `RxSwift`
 
-## Observables aka Sequences
+## 信号即序列
 
 ### 基础
 
@@ -29,26 +29,26 @@ Sequences 是一个简单熟悉的概念，**容易可视化**
 
 人类是拥有庞大视觉大脑皮层的生物，可以很容易理解可视化之后的概念
 
-We can lift a lot of the cognitive load from trying to simulate event state machines inside every Rx operator onto high level operations over sequences.
+我们可以通过在序列更高级的操作上模拟每个 Rx 操作符内部的事件状态机的方式来提升我们的认知
 
-If we don't use Rx but model asynchronous systems, that probably means our code is full of state machines and transient states that we need to simulate instead of abstracting away.
+如果我们在构建异步的系统但是没有使用 Rx，很可能意味着我们的代码有很多的状态机和暂态需要去模拟，而不是以一种抽象的方式
 
-Lists and sequences are probably one of the first concepts mathematicians and programmers learn.
+列表和序列大概是数学家和程序员首先要学习的概念之一
 
-Here is a sequence of numbers:
+下面是一个数字序列：
 
 
 ```
 --1--2--3--4--5--6--| // terminates normally
 ```
 
-Another sequence, with characters:
+下面是一个字符序列：
 
 ```
 --a--b--a--a--a---d---X // terminates with error
 ```
 
-Some sequences are finite while others are infinite, like a sequence of button taps:
+有些序列是有限的，有些序列是无限的，比如按钮的点击事件产生的序列：
 
 ```
 ---tap-tap-------tap--->
