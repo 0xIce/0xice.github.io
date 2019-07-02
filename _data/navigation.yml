@@ -36,7 +36,7 @@ RxSwift-docs:
         url: /rxswift/get-start/
       - title: "特征序列"
         url: /rxswift/traits/
-      # - title: "Tips"
-      #   url: /
+      - title: "Tips"
+        url: /rxswift/tips/
       # - title: "冷热信号"
       #   url: /
