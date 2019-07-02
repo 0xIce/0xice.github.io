@@ -34,8 +34,8 @@ RxSwift-docs:
         url: /rxswift/why/
       - title: "开始使用 RxSwift"
         url: /rxswift/get-start/
-      # - title: "核心概念"
-      #   url: /
+      - title: "特征序列"
+        url: /rxswift/traits/
       # - title: "Tips"
       #   url: /
       # - title: "冷热信号"

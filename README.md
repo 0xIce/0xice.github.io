@@ -15,12 +15,15 @@
     <th>Input</th>
   </tr>
   <tr>
-    <td rowspan="2">RxSwift</td>
-    <td rowspan="2"></td>
+    <td rowspan="3">RxSwift</td>
+    <td rowspan="3"></td>
     <td><a href="_posts/RxSwift/2019-06-30-why.md">为什么使用 Rx</a></td>
   </tr>
   <tr>
     <td><a href="_posts/RxSwift/2019-07-01-get-start.md">开始使用 RxSwift</a></td>
+  </tr>
+  <tr>
+    <td><a href="_posts/RxSwift/2019-07-02-traits.md">特征序列</a></td>
   </tr>
   <tr>
     <td rowspan="2">Persistence</td>
