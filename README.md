@@ -15,8 +15,8 @@
     <th>Input</th>
   </tr>
   <tr>
-    <td rowspan="4">RxSwift</td>
-    <td rowspan="4"></td>
+    <td rowspan="5">RxSwift</td>
+    <td rowspan="5"></td>
     <td><a href="_posts/RxSwift/2019-06-30-why.md">为什么使用 Rx</a></td>
   </tr>
   <tr>
@@ -27,6 +27,9 @@
   </tr>
   <tr>
     <td><a href="_posts/RxSwift/2019-07-03-tips.md">Tips</a></td>
+  </tr>
+  <tr>
+    <td><a href="_posts/RxSwift/2019-07-03-hot-cold-observables.md">冷热信号</a></td>
   </tr>
   <tr>
     <td rowspan="2">Persistence</td>

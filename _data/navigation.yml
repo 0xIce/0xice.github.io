@@ -38,5 +38,5 @@ RxSwift-docs:
         url: /rxswift/traits/
       - title: "Tips"
         url: /rxswift/tips/
-      # - title: "冷热信号"
-      #   url: /
+      - title: "冷热信号"
+        url: /rxswift/hot-cold-observables/
