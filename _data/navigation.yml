@@ -40,3 +40,55 @@ RxSwift-docs:
         url: /rxswift/tips/
       - title: "冷热信号"
         url: /rxswift/hot-cold-observables/
+  - title: raywenderlich RxSwift Book
+    children:
+      - title: 1-Hello RxSwift!                                                                                  
+        url: /rxswift/hello-rxswift/
+      - title: 2-Observables
+        url: /rxswift/observables/
+      - title: 3-Subjects
+        url: /rxswift/subjects/
+      - title: 4-Observables and Subjects in Practice
+        url: /rxswift/observables-and-subjects-in-practice/
+      - title: 5-Filtering Operators
+        url: /rxswift/filtering-operators/
+      - title: 6-Filtering Operators in Practice
+        url: /rxswift/filtering-operators-in-practice/
+      - title: 7-Transforming Operators
+        url: /rxswift/transforming-operators/
+      - title: 8-Transforming Operators in Practice
+        url: /rxswift/transforming-operators-in-practice/
+      - title: 9-Combining Operators
+        url: /rxswift/combining-operators/
+      - title: 10-Combining Operators in Practice
+        url: /rxswift/combining-operators-in-practice/
+      - title: 11-Time-Based Operators
+        url: /rxswift/time-based-operators/
+      - title: 12-Beginning RxCocoa
+        url: /rxswift/beginning-rxcocoa/
+      - title: 13-Intermediate RxCocoa
+        url: /rxswift/intermediate-rxcocoa/
+      - title: 14-Error Handling in Practice
+        url: /rxswift/error-handling-in-practice/
+      - title: 15-Intro to Schedulers
+        url: /rxswift/intro-to-schedulers/
+      - title: 16-Testing with RxTest
+        url: /rxswift/testing-with-rxtest/
+      - title: 17-Creating Custom Reactive Extensions
+        url: /rxswift/creating-custom-reactive-extensions/
+      - title: 18-Table and Collection Views
+        url: /rxswift/table-and-collection-views/
+      - title: 19-RxSwiftExt-New
+        url: /rxswift/rxswift-ext-new/
+      - title: 20-Action
+        url: /rxswift/action/
+      - title: 21-RxGesture
+        url: /rxswift/rxgesture/
+      - title: 22-RxRealm
+        url: /rxswift/rxrealm/
+      - title: 23-RxAlamofire
+        url: /rxswift/rxalamofire/
+      - title: 24-MVVM with RxSwift
+        url: /rxswift/mvvm-with-rxswift/
+      - title: 25-Building a Complete RxSwift App
+        url: /rxswift/building-a-complete-rxswift-app/
