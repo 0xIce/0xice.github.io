@@ -1,5 +1,5 @@
 ---
-title: Subjects
+title: RxSwift Subjects
 categories:
   - RxSwift
 tags:
@@ -9,3 +9,4 @@ author_profile: false
 sidebar:
   nav: RxSwift-docs
 ---
+
