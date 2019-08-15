@@ -431,3 +431,7 @@ class GHFlutterApp extends StatelessWidget {
   }
 }  
 ```
+
+## Reference
+
+1. [Demo](https://github.com/hotchner/github-flutter)
