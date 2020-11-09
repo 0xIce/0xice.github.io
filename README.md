@@ -2,9 +2,9 @@
 
 记录一下自己的学习过程，包括对 iOS 系统框架和开源框架的学习，使用和源码的阅读
 
-[博客阅读](https://hotchner.github.io/)
+[博客阅读](https://0xice.github.io/)
 
-[RSS订阅](https://hotchner.github.io/feed.xml)
+[RSS订阅](https://0xice.github.io/feed.xml)
 
 ## Contents
 
