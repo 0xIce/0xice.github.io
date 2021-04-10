@@ -15,9 +15,9 @@ title                    : "马红奇的博客"
 title_separator          : "-"
 name                     : &name "马红奇" # &name is a YAML anchor which can be *referenced later
 description              : &description "马红奇的成长记录，包括技术总结、读书笔记等"
-url                      : https://hotchner.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+url                      : https://0xice.github.io/ # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
-repository               : "hotchner/hotchner.github.io"
+repository               : "0xice/0xice.github.io"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 # breadcrumbs            : false # true, false (default)
 words_per_minute         : 20
@@ -116,7 +116,7 @@ author:
     #   url: "https://twitter.com/mmistakes"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/hotchner"
+      url: "https://github.com/0xice"
     # - label: "Instagram"
     #   icon: "fab fa-fw fa-instagram"
     #   url: "https://instagram.com/mmistakes"
