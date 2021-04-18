@@ -16,12 +16,13 @@ toc: true
 创建 widget 的主要工作是实现它的 build 方法，build 方法根据其它较低级别的 widget 来描述这个 widget，框架会逐一构建这些 widget，直到最底层的描述 widget 几何形状的 RenderObject
 
 ## 基础 widgets
-|Widget|用途|
-|:-------:|:-------:|
-|Text|用来在应用内创建带样式的文本|
-|Row,Column|flex widgets, 可以在水平和垂直方向创建灵活的布局，它是基于 web 的 flexbox 布局模型设计的|
-|Stack|按照绘制顺序将widget堆叠在一起，可以使用 Positioned widget 作为 stack 的子 widget，以机相对于 Stack 的上，右，下，左来定位它们。 Stack 是基于 Web 中的绝对位置布局模型设计的|
-|Container|可以用来创建一个可见的矩形元素，可以使用 BoxDecooratioon 来进行装饰，如背景、边框、阴影等。Container 还可以设置外边距、内边距和尺寸的约束条件等，另外，Container 可以使用矩阵在三维空间进行转换|
+
+| Widget | 用途   |
+| ------ | ------ |
+| Text | 用来在应用内创建带样式的文本 |
+| Row,Column|flex widgets, 可以在水平和垂直方向创建灵活的布局，它是基于 web 的 flexbox 布局模型设计的 |
+| Stack | 按照绘制顺序将widget堆叠在一起，可以使用 Positioned widget 作为 stack 的子 widget，以机相对于 Stack 的上，右，下，左来定位它们。 Stack 是基于 Web 中的绝对位置布局模型设计的 |
+| Container | 可以用来创建一个可见的矩形元素，可以使用 BoxDecooratioon 来进行装饰，如背景、边框、阴影等。Container 还可以设置外边距、内边距和尺寸的约束条件等，另外，Container 可以使用矩阵在三维空间进行转换 |
 
 ## 使用 Material 组件
 Material 组件提供了有用的 widget，其中包括 Navigator、AppBar、Scaffold
