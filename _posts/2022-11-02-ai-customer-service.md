@@ -1,4 +1,13 @@
-
+---
+title: 智能客服入门
+excerpt: 智能客服入门资料汇总
+categories:
+  - 智能客服
+tags:
+  - NLP
+  - AI
+toc: true
+---
 [聊天机器人资料汇总](https://mp.weixin.qq.com/s/7xmDcaczpda5eoViPrjLRA)
 
 [英文对话系统汇总](http://nlpprogress.com/english/dialogue.html)
