@@ -1,9 +1,18 @@
-
+---
+title: 智能客服入门
+excerpt: 智能客服入门资料汇总
+categories:
+  - 智能客服
+tags:
+  - NLP
+  - AI
+toc: true
+---
 [聊天机器人资料汇总](https://mp.weixin.qq.com/s/7xmDcaczpda5eoViPrjLRA)
 
 [英文对话系统汇总](http://nlpprogress.com/english/dialogue.html)
 
-[必读论文 | 20 篇聊天机器人领域必读论文速递！](https://www.aminer.cn/research_report/5e96a890ab6e30e67b2c7875?download=false&from=singlemessage&isappinstalled=0)
+[必读论文 | 20 篇聊天机器人领域必读论文速递!](https://www.aminer.cn/research_report/5e96a890ab6e30e67b2c7875?download=false&from=singlemessage&isappinstalled=0)
 
 [MSRA周明博士解读：聊天机器人的三大引擎（视频+PPT）](https://mp.weixin.qq.com/s/FBynWU8BLyJcUomO3Y8mSg)
 
