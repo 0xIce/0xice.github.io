@@ -9,17 +9,19 @@ main:
   # - title: "Quick-Start Guide"
   #   url: /docs/quick-start-guide/
   - title: "About"
-    url: /about/
+    url: /about
   - title: "Posts"
-    url: /year-archive/
+    url: /year-archive
   # - title: "Sample Collections"
   #   url: /collection-archive/
   # - title: "Terms &amp; Privacy Policy"
   #   url: /terms/
   - title: "Categories"
-    url: /categories/
+    url: /categories
   - title: "Tags"
-    url: /tags/
+    url: /tags
+  - title: "Gallery"
+    url: /gallery
   # - title: "Sitemap"
   #   url: /sitemap/
   # - title: "Home"
